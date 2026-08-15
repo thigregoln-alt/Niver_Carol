@@ -1297,13 +1297,15 @@ document.addEventListener('DOMContentLoaded', function(){
     }, 1100);
   }
 
-  function renderFinal(){
-    root.innerHTML = `
-      <div class="quiz-card quiz-final show">
-        <div class="quiz-category">resultado final</div>
-        <div class="score">${score} de ${quizData.length}</div>
-        <p>${score === quizData.length ? 'você me conhece de cor.' : 'bora aprender mais um sobre o outro esse ano.'}</p>
-      </div>`;
+function renderFinal(){
+    let message;
+    if(score === quizData.length){
+      message = 'você me conhece de cor.';
+    } else if(score >= 6){
+      message = 'bora aprender mais um sobre o outro esse ano.';
+    } else {
+      message = 'desculpa aí, temos muito o que conversar ainda.';
+    }
 
     const lines = corrections.length
       ? corrections.map(c=> `${c.cat}: Thiago achou "${c.guess}", a certa é "${c.correct}"`).join(' | ')
