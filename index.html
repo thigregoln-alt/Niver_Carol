@@ -166,11 +166,26 @@ img{max-width:100%; display:block;}
 
 /* ---- interests grid ---- */
 .interests-block{ margin-bottom:56px; }
-.interests-grid{ display:flex; flex-wrap:wrap; gap:20px 16px; justify-content:center; }
-.interest-photo-card{ position:relative; background:#fbf8f0; padding:12px 12px 32px; border-radius:3px; box-shadow:var(--shadow); width:min(150px,40vw); }
-.interest-photo-card .slot{ width:100%; aspect-ratio:1/1; border-radius:1px; overflow:hidden; position:relative; }
-.interest-photo-card .slot img{ width:100%; height:100%; object-fit:cover; display:block; }
-.interest-photo-card .cap{ text-align:center; font-family:'Caveat'; font-weight:600; font-size:17px; margin-top:10px; color:var(--navy-700); }
+.interests-grid{ display:flex; flex-wrap:wrap; justify-content:center; align-items:flex-start; gap:38px 22px; padding:18px 8px 4px; }
+.locket-item{ position:relative; display:flex; flex-direction:column; align-items:center; }
+.locket{ cursor:pointer; transform-origin:50% 0%; animation:locketSwing 4.6s ease-in-out infinite; }
+@keyframes locketSwing{ 0%,100%{ transform:rotate(-3deg); } 50%{ transform:rotate(3deg); } }
+.locket-hook{ width:18px; height:22px; display:block; margin:0 auto -7px; position:relative; z-index:2; }
+.locket-frame{ width:96px; height:96px; border-radius:50%; overflow:hidden; border:3px solid var(--gold); box-shadow:0 16px 30px rgba(3,7,20,.55), inset 0 0 0 2px rgba(5,11,31,.35); position:relative; }
+.locket-frame img{ width:100%; height:100%; object-fit:cover; display:block; transition:transform .5s ease; }
+.locket:hover .locket-frame img{ transform:scale(1.12); }
+.locket-cap{ margin-top:11px; font-family:'Caveat'; font-weight:600; font-size:16px; color:var(--ice-100); text-align:center; }
+.locket-voucher{
+  position:absolute; left:50%; bottom:calc(100% + 14px); transform:translateX(-50%) translateY(6px) scale(.9);
+  width:172px; background:linear-gradient(160deg,#16295a,#0a1633); border:1px solid rgba(238,244,255,.15);
+  border-radius:12px; padding:14px 16px; text-align:center; opacity:0; pointer-events:none;
+  transition:opacity .3s ease, transform .3s cubic-bezier(.2,.8,.2,1); z-index:10;
+  box-shadow:0 24px 46px rgba(0,0,0,.5);
+}
+.locket-voucher::after{ content:""; position:absolute; top:100%; left:50%; transform:translateX(-50%); border:7px solid transparent; border-top-color:#0a1633; }
+.locket-voucher.show{ opacity:1; transform:translateX(-50%) translateY(0) scale(1); pointer-events:all; }
+.locket-voucher .vp-tag{ font-size:9px; letter-spacing:.2em; text-transform:uppercase; color:var(--blue-200); margin-bottom:8px; }
+.locket-voucher p{ font-family:'Cormorant Garamond'; font-style:italic; font-size:14px; color:#fff; margin:0; line-height:1.5; }
 
 /* ---- promise ---- */
 .promise{ position:relative; text-align:center; margin-bottom:60px; padding:34px 26px; }
@@ -220,11 +235,6 @@ img{max-width:100%; display:block;}
 
 .ticket{ transition: box-shadow .3s ease, filter .3s ease; }
 .ticket:hover{ box-shadow:0 28px 52px rgba(3,7,20,.6); filter:brightness(1.04); }
-
-.interest-photo-card{ cursor:pointer; transition: box-shadow .3s ease, filter .3s ease; }
-.interest-photo-card .slot img{ transition: transform .5s ease; }
-.interest-photo-card:hover .slot img{ transform:scale(1.1); }
-.interest-photo-card:hover{ box-shadow:0 28px 54px rgba(3,7,20,.65); filter:brightness(1.05); }
 
 .pad button{ transition: background .15s ease, transform .15s ease; }
 .pad button:hover{ background:rgba(255,255,255,.16); transform:translateY(-1px); }
@@ -336,21 +346,6 @@ a.music-caption-link{ transition: opacity .2s ease; }
 /* ============================================================
    NEW: hidden gift vouchers on the interest cards
    ============================================================ */
-.voucher-badge{
-  position:absolute; top:10px; right:10px; width:26px; height:26px; border-radius:50%;
-  background:rgba(5,11,31,.55); display:flex; align-items:center; justify-content:center; z-index:2;
-  animation:wishPulse 2.6s ease-in-out infinite;
-}
-.voucher-badge svg{ width:13px; height:13px; }
-.voucher-panel{
-  position:absolute; inset:0; background:linear-gradient(160deg,#16295a,#0a1633);
-  display:flex; align-items:center; justify-content:center; padding:20px; text-align:center;
-  opacity:0; transform:scale(.9); pointer-events:none; transition:opacity .35s ease, transform .35s cubic-bezier(.2,.8,.2,1);
-  border-radius:3px; z-index:3;
-}
-.voucher-panel.show{ opacity:1; transform:scale(1); pointer-events:all; }
-.voucher-panel .vp-tag{ font-size:10px; letter-spacing:.2em; text-transform:uppercase; color:var(--blue-200); margin-bottom:10px; }
-.voucher-panel p{ font-family:'Cormorant Garamond'; font-style:italic; font-size:16px; color:#fff; margin:0; line-height:1.5; }
 </style>
 </head>
 <body>
@@ -839,34 +834,44 @@ a.music-caption-link{ transition: opacity .2s ease; }
         <div class="section-label"><span class="rule"></span>coisas que combinam com você<span class="rule"></span></div>
         <div class="interests-grid">
 
-          <div class="interest-photo-card" style="transform:rotate(-4deg);">
-            <div class="washi wtape2"></div>
-            <div class="slot"><img src="https://images.unsplash.com/photo-1758030320099-6e4da986783e?auto=format&fit=crop&w=700&q=80" alt="castelo iluminado à noite"></div>
-            <div class="cap">toque de princesa</div>
+          <div class="interest-photo-card locket-item">
+            <div class="locket" style="animation-delay:-.6s;">
+              <svg class="locket-hook" viewBox="0 0 20 24"><path d="M10 2 C5 2 3 7 6.5 9.5 C8.5 11 11.5 11 13.5 9.5 C17 7 15 2 10 2Z" fill="none" stroke="var(--gold)" stroke-width="1.8"/></svg>
+              <div class="locket-frame"><img src="https://images.unsplash.com/photo-1758030320099-6e4da986783e?auto=format&fit=crop&w=500&q=80" alt="castelo iluminado à noite"></div>
+            </div>
+            <div class="locket-cap">toque de princesa</div>
           </div>
 
-          <div class="interest-photo-card" style="transform:rotate(3deg);">
-            <div class="washi wtape1"></div>
-            <div class="slot"><img src="https://images.unsplash.com/photo-1698510353011-a7c8a7930342?auto=format&fit=crop&w=700&q=80" alt="oceano estrelado brilhando"></div>
-            <div class="cap">uma pitada de Moana</div>
+          <div class="interest-photo-card locket-item">
+            <div class="locket" style="animation-delay:-2.4s;">
+              <svg class="locket-hook" viewBox="0 0 20 24"><path d="M10 2 C5 2 3 7 6.5 9.5 C8.5 11 11.5 11 13.5 9.5 C17 7 15 2 10 2Z" fill="none" stroke="var(--gold)" stroke-width="1.8"/></svg>
+              <div class="locket-frame"><img src="https://images.unsplash.com/photo-1698510353011-a7c8a7930342?auto=format&fit=crop&w=500&q=80" alt="oceano estrelado brilhando"></div>
+            </div>
+            <div class="locket-cap">uma pitada de Moana</div>
           </div>
 
-          <div class="interest-photo-card" style="transform:rotate(-3deg);">
-            <div class="washi wtape3"></div>
-            <div class="slot"><img src="https://images.unsplash.com/photo-1669127045641-0ae683639570?auto=format&fit=crop&w=700&q=80" alt="sorvete de iogurte"></div>
-            <div class="cap">sorvete de iogurte</div>
+          <div class="interest-photo-card locket-item">
+            <div class="locket" style="animation-delay:-1.3s;">
+              <svg class="locket-hook" viewBox="0 0 20 24"><path d="M10 2 C5 2 3 7 6.5 9.5 C8.5 11 11.5 11 13.5 9.5 C17 7 15 2 10 2Z" fill="none" stroke="var(--gold)" stroke-width="1.8"/></svg>
+              <div class="locket-frame"><img src="https://images.unsplash.com/photo-1669127045641-0ae683639570?auto=format&fit=crop&w=500&q=80" alt="sorvete de iogurte"></div>
+            </div>
+            <div class="locket-cap">sorvete de iogurte</div>
           </div>
 
-          <div class="interest-photo-card" style="transform:rotate(4deg);">
-            <div class="washi wtape2"></div>
-            <div class="slot"><img src="https://images.unsplash.com/photo-1762127488978-6cdd28deb884?auto=format&fit=crop&w=700&q=80" alt="praia ao entardecer"></div>
-            <div class="cap">tardes de praia</div>
+          <div class="interest-photo-card locket-item">
+            <div class="locket" style="animation-delay:-3.5s;">
+              <svg class="locket-hook" viewBox="0 0 20 24"><path d="M10 2 C5 2 3 7 6.5 9.5 C8.5 11 11.5 11 13.5 9.5 C17 7 15 2 10 2Z" fill="none" stroke="var(--gold)" stroke-width="1.8"/></svg>
+              <div class="locket-frame"><img src="https://images.unsplash.com/photo-1762127488978-6cdd28deb884?auto=format&fit=crop&w=500&q=80" alt="praia ao entardecer"></div>
+            </div>
+            <div class="locket-cap">tardes de praia</div>
           </div>
 
-          <div class="interest-photo-card" style="transform:rotate(-2deg);">
-            <div class="washi wtape1"></div>
-            <div class="slot"><img src="https://images.unsplash.com/photo-1581607961723-a94f1293ebdc?auto=format&fit=crop&w=700&q=80" alt="vôlei de praia ao entardecer"></div>
-            <div class="cap">tardes de vôlei</div>
+          <div class="interest-photo-card locket-item">
+            <div class="locket" style="animation-delay:-.1s;">
+              <svg class="locket-hook" viewBox="0 0 20 24"><path d="M10 2 C5 2 3 7 6.5 9.5 C8.5 11 11.5 11 13.5 9.5 C17 7 15 2 10 2Z" fill="none" stroke="var(--gold)" stroke-width="1.8"/></svg>
+              <div class="locket-frame"><img src="https://images.unsplash.com/photo-1581607961723-a94f1293ebdc?auto=format&fit=crop&w=500&q=80" alt="vôlei de praia ao entardecer"></div>
+            </div>
+            <div class="locket-cap">tardes de vôlei</div>
           </div>
 
         </div>
@@ -1142,12 +1147,10 @@ document.addEventListener('DOMContentLoaded', function(){
       <p>${promptText}</p>
       <form id="wishForm">
         <input type="text" id="wishInput" placeholder="escreve aqui..." maxlength="200" required />
-        <div class="wm-actions">
-          <button type="submit">enviar</button>
-          <button type="button" id="wishMessageClose">fechar</button>
-        </div>
+        <button type="submit" style="width:100%; margin-bottom:10px;">enviar</button>
       </form>
-      <div class="wm-status" id="wishStatus"></div>`;
+      <div class="wm-status" id="wishStatus"></div>
+      <button type="button" id="wishMessageClose">fechar</button>`;
     document.body.appendChild(box);
     box.querySelector('#wishMessageClose').addEventListener('click', ()=> box.classList.remove('show'));
     box.addEventListener('click', (e)=>{ if(e.target === box) box.classList.remove('show'); });
@@ -1169,6 +1172,7 @@ document.addEventListener('DOMContentLoaded', function(){
         if(res.ok){
           box.querySelector('#wishForm').style.display = 'none';
           status.textContent = 'desejo enviado — obrigada por contar!';
+          setTimeout(()=> box.classList.remove('show'), 2600);
         } else {
           status.textContent = 'não consegui enviar agora. tenta de novo em um instante.';
         }
@@ -1220,8 +1224,8 @@ document.addEventListener('DOMContentLoaded', function(){
     if(!vouchers[i]) return;
 
     const panel = document.createElement('div');
-    panel.className = 'voucher-panel';
-    panel.innerHTML = `<div><div class="vp-tag">vale</div><p>${vouchers[i]}</p></div>`;
+    panel.className = 'locket-voucher';
+    panel.innerHTML = `<div class="vp-tag">vale</div><p>${vouchers[i]}</p>`;
     card.appendChild(panel);
 
     card.addEventListener('click', (e)=>{
