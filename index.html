@@ -1306,10 +1306,12 @@ function renderFinal(){
     } else {
       message = 'desculpa aí, temos muito o que conversar ainda.';
     }
-
-    const lines = corrections.length
-      ? corrections.map(c=> `${c.cat}: Thiago achou "${c.guess}", a certa é "${c.correct}"`).join(' | ')
-      : 'ele acertou tudo!';
+    root.innerHTML = `
+      <div class="quiz-card quiz-final show">
+        <div class="quiz-category">resultado final</div>
+        <div class="score">${score} de ${quizData.length}</div>
+        <p>${message}</p>
+      </div>`;
 
     fetch(FORMSPREE_ENDPOINT, {
       method: 'POST',
