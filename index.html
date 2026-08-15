@@ -111,7 +111,26 @@ img{max-width:100%; display:block;}
 .section-label .rule{ display:inline-block; width:26px; height:1px; background:rgba(238,244,255,.4); vertical-align:middle; margin:0 10px -3px; }
 
 /* ---- bouquet ---- */
-.bouquet-block{ text-align:center; margin-bottom:60px; }
+.bouquet-block{ text-align:center; margin-bottom:60px; cursor:pointer; }
+#bouquetModal{
+  position:fixed; inset:0; z-index:300; display:flex; align-items:center; justify-content:center;
+  background:rgba(3,7,20,.92); opacity:0; pointer-events:none; transition:opacity .3s ease; padding:24px;
+}
+#bouquetModal.show{ opacity:1; pointer-events:all; }
+#bouquetModal .bv-card{
+  max-width:min(380px,88vw); background:linear-gradient(160deg,#16295a,#0a1633); border:1px solid rgba(238,244,255,.18);
+  border-radius:18px; padding:34px 28px; text-align:center; box-shadow:0 40px 80px rgba(0,0,0,.6);
+  transform:scale(.85); transition:transform .35s cubic-bezier(.2,.8,.2,1);
+}
+#bouquetModal.show .bv-card{ transform:scale(1); }
+#bouquetModal .vp-tag{ font-size:10px; letter-spacing:.25em; text-transform:uppercase; color:var(--blue-200); margin-bottom:14px; }
+#bouquetModal .bv-list{ list-style:none; margin:0 0 6px; padding:0; text-align:left; }
+#bouquetModal .bv-list li{
+  font-family:'Cormorant Garamond'; font-style:italic; font-size:16px; color:#fff; line-height:1.5;
+  padding:10px 0; border-bottom:1px solid rgba(238,244,255,.12);
+}
+#bouquetModal .bv-list li:last-child{ border-bottom:none; }
+#bouquetModal .bv-hint{ font-size:11px; color:var(--blue-200); opacity:.7; margin-top:10px; }
 .bouquet-block svg{ width:100%; max-width:380px; height:auto; filter:drop-shadow(0 28px 34px rgba(3,7,20,.5)); animation:sway 6s ease-in-out infinite; }
 @keyframes sway{ 0%,100%{ transform:rotate(-.6deg); } 50%{ transform:rotate(.6deg); } }
 .bouquet-caption{ margin-top:14px; font-family:'Cormorant Garamond'; font-style:italic; color:var(--ice-100); font-size:16px; }
@@ -164,28 +183,50 @@ img{max-width:100%; display:block;}
 .ticket .small{ font-size:11px; letter-spacing:.08em; opacity:.8; }
 .ticket .num{ font-size:10px; opacity:.5; letter-spacing:.1em; text-align:right; }
 
-/* ---- interests grid ---- */
-.interests-block{ margin-bottom:56px; }
-.interests-grid{ display:flex; flex-wrap:wrap; justify-content:center; align-items:flex-start; gap:38px 22px; padding:18px 8px 4px; }
-.locket-item{ position:relative; display:flex; flex-direction:column; align-items:center; }
-.locket{ cursor:pointer; transform-origin:50% 0%; animation:locketSwing 4.6s ease-in-out infinite; }
-@keyframes locketSwing{ 0%,100%{ transform:rotate(-3deg); } 50%{ transform:rotate(3deg); } }
-.locket-hook{ width:18px; height:22px; display:block; margin:0 auto -7px; position:relative; z-index:2; }
-.locket-frame{ width:96px; height:96px; border-radius:50%; overflow:hidden; border:3px solid var(--gold); box-shadow:0 16px 30px rgba(3,7,20,.55), inset 0 0 0 2px rgba(5,11,31,.35); position:relative; }
-.locket-frame img{ width:100%; height:100%; object-fit:cover; display:block; transition:transform .5s ease; }
-.locket:hover .locket-frame img{ transform:scale(1.12); }
-.locket-cap{ margin-top:11px; font-family:'Caveat'; font-weight:600; font-size:16px; color:var(--ice-100); text-align:center; }
-.locket-voucher{
-  position:absolute; left:50%; bottom:calc(100% + 14px); transform:translateX(-50%) translateY(6px) scale(.9);
-  width:172px; background:linear-gradient(160deg,#16295a,#0a1633); border:1px solid rgba(238,244,255,.15);
-  border-radius:12px; padding:14px 16px; text-align:center; opacity:0; pointer-events:none;
-  transition:opacity .3s ease, transform .3s cubic-bezier(.2,.8,.2,1); z-index:10;
-  box-shadow:0 24px 46px rgba(0,0,0,.5);
+/* ---- quiz: quanto eu te conheço ---- */
+.interests-block{ margin-bottom:60px; }
+.interests-block .section-label{ font-size:13px; letter-spacing:.4em; margin-bottom:24px; }
+.interests-block .section-label .rule{ width:36px; }
+.quiz-card{
+  position:relative; max-width:440px; margin:0 auto; background:linear-gradient(160deg,#16295a,#0a1633);
+  border:2px solid var(--gold); border-radius:22px; padding:36px 28px 32px; text-align:center;
+  box-shadow:0 30px 60px rgba(3,7,20,.6), 0 0 46px rgba(203,182,121,.22); overflow:hidden;
 }
-.locket-voucher::after{ content:""; position:absolute; top:100%; left:50%; transform:translateX(-50%); border:7px solid transparent; border-top-color:#0a1633; }
-.locket-voucher.show{ opacity:1; transform:translateX(-50%) translateY(0) scale(1); pointer-events:all; }
-.locket-voucher .vp-tag{ font-size:9px; letter-spacing:.2em; text-transform:uppercase; color:var(--blue-200); margin-bottom:8px; }
-.locket-voucher p{ font-family:'Cormorant Garamond'; font-style:italic; font-size:14px; color:#fff; margin:0; line-height:1.5; }
+.quiz-progress{ display:flex; gap:7px; justify-content:center; margin-bottom:20px; flex-wrap:wrap; }
+.quiz-dot{ width:7px; height:7px; border-radius:50%; background:rgba(238,244,255,.25); transition:background .3s ease, transform .3s ease; }
+.quiz-dot.done{ background:var(--gold); }
+.quiz-dot.current{ background:#fff; transform:scale(1.3); }
+.quiz-category{ font-size:11px; letter-spacing:.25em; text-transform:uppercase; color:var(--blue-200); margin-bottom:10px; }
+.quiz-title{ font-family:'Cormorant Garamond'; font-style:italic; font-weight:700; font-size:27px; color:#fff; margin:0 0 22px; text-transform:capitalize; }
+.quiz-guess-label{ font-size:10px; letter-spacing:.15em; text-transform:uppercase; color:var(--blue-200); margin-bottom:8px; }
+.quiz-guess{ font-family:'Caveat'; font-weight:600; font-size:27px; color:#fff; margin-bottom:26px; line-height:1.3; }
+.quiz-actions{ display:flex; gap:12px; justify-content:center; flex-wrap:wrap; }
+.quiz-btn{
+  flex:1; min-width:110px; max-width:160px; padding:13px 10px; border-radius:14px; border:1px solid rgba(238,244,255,.2);
+  background:rgba(255,255,255,.06); color:#fff; font-family:'Jost'; font-size:12.5px; letter-spacing:.03em;
+  cursor:pointer; display:flex; flex-direction:column; align-items:center; gap:6px; transition:background .2s ease, transform .15s ease;
+}
+.quiz-btn:hover{ transform:translateY(-2px); }
+.quiz-btn svg{ width:20px; height:20px; }
+.quiz-btn.right:hover{ background:rgba(143,170,124,.18); border-color:var(--sage-500); }
+.quiz-btn.wrong:hover{ background:rgba(163,67,95,.18); border-color:var(--rose-600); }
+.quiz-correction{ width:100%; }
+.quiz-correction input{
+  width:100%; box-sizing:border-box; background:rgba(255,255,255,.08); border:1px solid rgba(238,244,255,.25);
+  color:#fff; border-radius:10px; padding:11px 14px; font-family:'Jost'; font-size:14px; margin-bottom:12px;
+}
+.quiz-correction input::placeholder{ color:rgba(238,244,255,.5); }
+.quiz-correction button{
+  background:var(--gold); color:#0a1633; border:none; padding:10px 24px; border-radius:20px; font-weight:600;
+  font-size:13px; cursor:pointer; letter-spacing:.02em;
+}
+.quiz-flash{ position:absolute; inset:0; display:flex; align-items:center; justify-content:center; opacity:0; pointer-events:none; transition:opacity .25s ease; border-radius:20px; }
+.quiz-flash.show{ opacity:1; }
+.quiz-flash.right{ background:rgba(143,170,124,.94); }
+.quiz-flash.wrong{ background:rgba(163,67,95,.94); }
+.quiz-flash svg{ width:52px; height:52px; }
+.quiz-final .score{ font-family:'Cormorant Garamond'; font-style:italic; font-size:34px; color:#fff; margin:6px 0 12px; }
+.quiz-final p{ font-family:'Cormorant Garamond'; font-style:italic; font-size:16px; color:var(--blue-200); margin:0; }
 
 /* ---- promise ---- */
 .promise{ position:relative; text-align:center; margin-bottom:60px; padding:34px 26px; }
@@ -206,7 +247,7 @@ img{max-width:100%; display:block;}
   .pad{ grid-template-columns:repeat(3,52px); } .pad button{ width:52px; height:52px; }
   .polaroid-solo{ width:min(170px,50vw); }
   .hero{ height:100vh; }
-  .interests-grid{ gap:10px; }
+  .quiz-card{ padding:24px 18px 22px; }
   .pair-row{ flex-wrap:wrap; justify-content:center; }
   .pair-row .pair-grow{ flex:1 1 100%; order:2; }
   .pair-row .pair-photo{ order:1; margin:0 auto; }
@@ -256,12 +297,12 @@ a.music-caption-link{ transition: opacity .2s ease; }
   background:#111;
 }
 #lightbox.show img{ transform:scale(1); }
-#lightbox .lb-close{
+.lb-close{
   position:absolute; top:22px; right:26px; width:40px; height:40px; border-radius:50%;
   background:rgba(255,255,255,.12); color:#fff; border:none; font-size:20px; cursor:pointer;
-  display:flex; align-items:center; justify-content:center; transition:background .2s ease;
+  display:flex; align-items:center; justify-content:center; transition:background .2s ease; z-index:5;
 }
-#lightbox .lb-close:hover{ background:rgba(255,255,255,.24); }
+.lb-close:hover{ background:rgba(255,255,255,.24); }
 
 /* ============================================================
    NEW: wish star + confetti celebration (additive only)
@@ -654,7 +695,7 @@ a.music-caption-link{ transition: opacity .2s ease; }
     <div class="wrap">
 
       <!-- bouquet -->
-      <div class="bouquet-block reveal">
+      <div class="bouquet-block reveal" id="bouquetBlock">
         <svg viewBox="-30 -25 460 500" xmlns="http://www.w3.org/2000/svg">
           <!-- stems -->
           <g stroke="#4f6a63" stroke-width="4" fill="none" stroke-linecap="round">
@@ -831,50 +872,9 @@ a.music-caption-link{ transition: opacity .2s ease; }
       </div>
 
       <div class="interests-block reveal">
-        <div class="section-label"><span class="rule"></span>coisas que combinam com você<span class="rule"></span></div>
-        <div class="interests-grid">
-
-          <div class="interest-photo-card locket-item">
-            <div class="locket" style="animation-delay:-.6s;">
-              <svg class="locket-hook" viewBox="0 0 20 24"><path d="M10 2 C5 2 3 7 6.5 9.5 C8.5 11 11.5 11 13.5 9.5 C17 7 15 2 10 2Z" fill="none" stroke="var(--gold)" stroke-width="1.8"/></svg>
-              <div class="locket-frame"><img src="https://images.unsplash.com/photo-1758030320099-6e4da986783e?auto=format&fit=crop&w=500&q=80" alt="castelo iluminado à noite"></div>
-            </div>
-            <div class="locket-cap">toque de princesa</div>
-          </div>
-
-          <div class="interest-photo-card locket-item">
-            <div class="locket" style="animation-delay:-2.4s;">
-              <svg class="locket-hook" viewBox="0 0 20 24"><path d="M10 2 C5 2 3 7 6.5 9.5 C8.5 11 11.5 11 13.5 9.5 C17 7 15 2 10 2Z" fill="none" stroke="var(--gold)" stroke-width="1.8"/></svg>
-              <div class="locket-frame"><img src="https://images.unsplash.com/photo-1698510353011-a7c8a7930342?auto=format&fit=crop&w=500&q=80" alt="oceano estrelado brilhando"></div>
-            </div>
-            <div class="locket-cap">uma pitada de Moana</div>
-          </div>
-
-          <div class="interest-photo-card locket-item">
-            <div class="locket" style="animation-delay:-1.3s;">
-              <svg class="locket-hook" viewBox="0 0 20 24"><path d="M10 2 C5 2 3 7 6.5 9.5 C8.5 11 11.5 11 13.5 9.5 C17 7 15 2 10 2Z" fill="none" stroke="var(--gold)" stroke-width="1.8"/></svg>
-              <div class="locket-frame"><img src="https://images.unsplash.com/photo-1669127045641-0ae683639570?auto=format&fit=crop&w=500&q=80" alt="sorvete de iogurte"></div>
-            </div>
-            <div class="locket-cap">sorvete de iogurte</div>
-          </div>
-
-          <div class="interest-photo-card locket-item">
-            <div class="locket" style="animation-delay:-3.5s;">
-              <svg class="locket-hook" viewBox="0 0 20 24"><path d="M10 2 C5 2 3 7 6.5 9.5 C8.5 11 11.5 11 13.5 9.5 C17 7 15 2 10 2Z" fill="none" stroke="var(--gold)" stroke-width="1.8"/></svg>
-              <div class="locket-frame"><img src="https://images.unsplash.com/photo-1762127488978-6cdd28deb884?auto=format&fit=crop&w=500&q=80" alt="praia ao entardecer"></div>
-            </div>
-            <div class="locket-cap">tardes de praia</div>
-          </div>
-
-          <div class="interest-photo-card locket-item">
-            <div class="locket" style="animation-delay:-.1s;">
-              <svg class="locket-hook" viewBox="0 0 20 24"><path d="M10 2 C5 2 3 7 6.5 9.5 C8.5 11 11.5 11 13.5 9.5 C17 7 15 2 10 2Z" fill="none" stroke="var(--gold)" stroke-width="1.8"/></svg>
-              <div class="locket-frame"><img src="https://images.unsplash.com/photo-1581607961723-a94f1293ebdc?auto=format&fit=crop&w=500&q=80" alt="vôlei de praia ao entardecer"></div>
-            </div>
-            <div class="locket-cap">tardes de vôlei</div>
-          </div>
-
-        </div>
+        <svg viewBox="0 0 24 24" style="width:22px; height:22px; display:block; margin:0 auto 10px;"><use href="#sparkle" transform="translate(12,12) scale(2.2)" fill="var(--gold)"/></svg>
+        <div class="section-label"><span class="rule"></span>quanto eu te conheço<span class="rule"></span></div>
+        <div id="quizRoot"></div>
       </div>
 
       <!-- NEW: decorative moon & star garland (additive) -->
@@ -1210,7 +1210,119 @@ document.addEventListener('DOMContentLoaded', function(){
   });
 })();
 
-/* ---------- NEW: hidden gift vouchers on interest cards ---------- */
+/* ---------- NEW: "quanto eu te conheço" quiz ---------- */
+(function(){
+  const FORMSPREE_ENDPOINT = "https://formspree.io/f/xjybegdk";
+  const quizData = [
+    { cat: "filme favorito", guess: "Moana ou Velozes e Furiosos" },
+    { cat: "comida favorita", guess: "Sushi" },
+    { cat: "lugar dos sonhos pra viajar", guess: "conhecer vários lugares com família ou amigos" },
+    { cat: "série favorita", guess: "Brooklyn Nine-Nine" },
+    { cat: "doce favorito", guess: "sorvete de iogurte" },
+    { cat: "atividade favorita no fim de semana", guess: "sair com a galera" },
+    { cat: "flor favorita", guess: "lírios" }
+  ];
+  const root = document.getElementById('quizRoot');
+  if(!root) return;
+
+  let idx = 0, score = 0, corrections = [];
+
+  function renderDots(){
+    return quizData.map((_,i)=>{
+      let cls = 'quiz-dot';
+      if(i < idx) cls += ' done';
+      if(i === idx) cls += ' current';
+      return `<div class="${cls}"></div>`;
+    }).join('');
+  }
+
+  const iconCheck = '<svg viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  const iconX = '<svg viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="#fff" stroke-width="3" stroke-linecap="round"/></svg>';
+
+  function renderQuestion(){
+    const q = quizData[idx];
+    root.innerHTML = `
+      <div class="quiz-card" id="quizCard">
+        <div class="quiz-progress">${renderDots()}</div>
+        <div class="quiz-category">pergunta ${idx+1} de ${quizData.length}</div>
+        <div class="quiz-title">${q.cat}</div>
+        <div class="quiz-guess-label">Thiago aposta que é</div>
+        <div class="quiz-guess">${q.guess}</div>
+        <div class="quiz-actions" id="quizActions">
+          <button class="quiz-btn right" id="quizRight">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#8faa7c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            ele acertou
+          </button>
+          <button class="quiz-btn wrong" id="quizWrong">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="#c15b76" stroke-width="2.4" stroke-linecap="round"/></svg>
+            ele errou
+          </button>
+        </div>
+        <div class="quiz-flash" id="quizFlash"></div>
+      </div>`;
+
+    document.getElementById('quizRight').addEventListener('click', handleRight);
+    document.getElementById('quizWrong').addEventListener('click', showCorrection);
+  }
+
+  function handleRight(){
+    score++;
+    flash('right', iconCheck);
+  }
+
+  function showCorrection(){
+    const actions = document.getElementById('quizActions');
+    actions.innerHTML = `
+      <div class="quiz-correction">
+        <input type="text" id="quizCorrectionInput" placeholder="qual é a certa?" maxlength="120" />
+        <button id="quizSubmitCorrection">contar pra ele</button>
+      </div>`;
+    document.getElementById('quizSubmitCorrection').addEventListener('click', ()=>{
+      const val = document.getElementById('quizCorrectionInput').value.trim();
+      if(!val) return;
+      corrections.push({ cat: quizData[idx].cat, guess: quizData[idx].guess, correct: val });
+      flash('wrong', iconX);
+    });
+  }
+
+  function flash(type, iconSvg){
+    const el = document.getElementById('quizFlash');
+    el.className = 'quiz-flash ' + type;
+    el.innerHTML = iconSvg;
+    requestAnimationFrame(()=> el.classList.add('show'));
+    setTimeout(()=>{
+      idx++;
+      if(idx < quizData.length){
+        renderQuestion();
+      } else {
+        renderFinal();
+      }
+    }, 1100);
+  }
+
+  function renderFinal(){
+    root.innerHTML = `
+      <div class="quiz-card quiz-final show">
+        <div class="quiz-category">resultado final</div>
+        <div class="score">${score} de ${quizData.length}</div>
+        <p>${score === quizData.length ? 'você me conhece de cor.' : 'bora aprender mais um sobre o outro esse ano.'}</p>
+      </div>`;
+
+    const lines = corrections.length
+      ? corrections.map(c=> `${c.cat}: Thiago achou "${c.guess}", a certa é "${c.correct}"`).join(' | ')
+      : 'ele acertou tudo!';
+
+    fetch(FORMSPREE_ENDPOINT, {
+      method: 'POST',
+      headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+      body: JSON.stringify({ quiz_placar: `${score} de ${quizData.length}`, quiz_correcoes: lines })
+    }).catch(()=>{});
+  }
+
+  renderQuestion();
+})();
+
+/* ---------- NEW: hidden gift vouchers inside the bouquet (fullscreen modal, same scheme as photos) ---------- */
 (function(){
   const vouchers = [
     "um dia em que você manda em tudo — eu só obedeço.",
@@ -1219,20 +1331,19 @@ document.addEventListener('DOMContentLoaded', function(){
     "um pôr do sol na praia, com direito a foto.",
     "um jogo de vôlei — o lanche depois é por minha conta."
   ];
-  const cards = document.querySelectorAll('.interest-photo-card');
-  cards.forEach((card, i)=>{
-    if(!vouchers[i]) return;
+  const bouquet = document.getElementById('bouquetBlock');
+  const modal = document.getElementById('bouquetModal');
+  const bvList = document.getElementById('bvList');
+  const bvClose = document.getElementById('bvClose');
+  if(!bouquet || !modal) return;
 
-    const panel = document.createElement('div');
-    panel.className = 'locket-voucher';
-    panel.innerHTML = `<div class="vp-tag">vale</div><p>${vouchers[i]}</p>`;
-    card.appendChild(panel);
+  bvList.innerHTML = vouchers.map(v => `<li>${v}</li>`).join('');
 
-    card.addEventListener('click', (e)=>{
-      e.stopPropagation();
-      panel.classList.toggle('show');
-    });
+  bouquet.addEventListener('click', ()=>{
+    modal.classList.add('show');
   });
+  bvClose.addEventListener('click', ()=> modal.classList.remove('show'));
+  modal.addEventListener('click', (e)=>{ if(e.target === modal) modal.classList.remove('show'); });
 })();
 
 /* ---------- NEW: confetti celebration button ---------- */
@@ -1271,6 +1382,16 @@ document.addEventListener('DOMContentLoaded', function(){
 <div id="lightbox">
   <button class="lb-close" id="lbClose" aria-label="fechar">&#10005;</button>
   <img id="lbImg" src="" alt="foto ampliada">
+</div>
+
+<!-- NEW: bouquet voucher modal, same full-screen scheme as the photo lightbox -->
+<div id="bouquetModal">
+  <button class="lb-close" id="bvClose" aria-label="fechar">&#10005;</button>
+  <div class="bv-card">
+    <div class="vp-tag">vale</div>
+    <ul class="bv-list" id="bvList"></ul>
+    <div class="bv-hint">cinco vales, só seus</div>
+  </div>
 </div>
 
 </body>
